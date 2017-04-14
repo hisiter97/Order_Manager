@@ -31,4 +31,15 @@ public class Manager {
             Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void showMainScreen(){
+        FXMLLoader loader = new FXMLLoader(
+            getClass().getResource("/fxml/main.fxml")
+          );
+        try {            
+            this.scene.setRoot((Parent) loader.load());
+        } catch (IOException ex) {
+            Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

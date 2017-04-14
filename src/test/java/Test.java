@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -15,9 +16,13 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * Created by TRONGNGHIA on 3/27/2017.
  */
 public class Test {
+    @Autowired
+    static UserDAO userDAO;
+    
     public static void main(String... args){
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-config.xml");
-        UserDAO userDAO = ctx.getBean(UserDAO.class);
+//        ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-config.xml");
+//        UserDAO userDAO = ctx.getBean(UserDAO.class);
+                
 //        UserEntity userEntity = new UserEntity();
 //        userEntity.setName("Nguyễn Trọng Nghĩa");
 //        userEntity.setPassword("nghia");

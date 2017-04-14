@@ -20,13 +20,13 @@ public class MainApp extends Application{
     @Override
     public void start(Stage stage) throws Exception {   
         Scene scene = new Scene(new StackPane());
-//        Manager manager = new Manager(scene);
-//        manager.showLoginScreen();
-//        stage.setScene(scene);
+        Manager manager = new Manager(scene);
+        manager.showLoginScreen();
+        stage.setScene(scene);
         stage.show();
     }
     
     public static void main(String... args){
-//        launch(args);
+        launch(args);
     }
 }
