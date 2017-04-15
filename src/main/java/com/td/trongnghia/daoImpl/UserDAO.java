@@ -18,14 +18,14 @@ public class UserDAO extends GenericDAO<UserEntity>{
     @Autowired
     private SessionFactory sessionFactory;
 
-    public Boolean checkAccountExisted(String userName, String password){
-        StringBuilder sql = new StringBuilder("SELECT u.userName, u.password FROM UserEntity u");
+    public UserEntity checkAccountExisted(String userName, String password){
+        StringBuilder sql = new StringBuilder("FROM UserEntity u");
         sql.append(" WHERE u.userName = :userName");
         sql.append(" AND u.password = :password");
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery(sql.toString());
         query.setParameter("userName", userName);
-        query.setParameter("password", password);
-        return query.list().size() > 0;
+        query.setParameter("password", password);        
+        return query.list().size() > 0? (UserEntity) query.list().get(0): null;
     }
 }

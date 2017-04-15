@@ -8,25 +8,28 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "orders")
-public class OrderEntity {
+public class OrderEntity {    
     @Id
     @Column(name = "order_id")
     @GeneratedValue
     private Long orderId;
     @OneToOne
-    @JoinColumn(name = "resource_id")
+    @JoinColumn(name = "resource_order")
     private ResourceEntity resourceEntity;
     @OneToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
+    @JoinColumn(name = "shipper")
+    private UserEntity shipper;
     @Column(name = "date_created")
     private Timestamp dateCreated;
-    @Column(name = "date_ordered")
-    private Timestamp dateOrdered;
+    @Column(name = "date_shipped")
+    private Timestamp dateShipped;
     @Column(name = "customer_name")
-    private String customer_name;
+    private String customerName;
     @Column(name = "customer_phone")
     private String customerPhone;
+    @OneToOne
+    @JoinColumn(name = "user_created")
+    private UserEntity userCreated;
 
     public Long getOrderId() {
         return orderId;
@@ -44,25 +47,25 @@ public class OrderEntity {
         this.dateCreated = dateCreated;
     }
 
-    public Timestamp getDateOrdered() {
-        return dateOrdered;
+    public Timestamp getDateShipped() {
+        return dateShipped;
     }
 
-    public void setDateOrdered(Timestamp dateOrdered) {
-        this.dateOrdered = dateOrdered;
+    public void setDateShipped(Timestamp dateShipped) {
+        this.dateShipped = dateShipped;
     }
 
-    public String getCustomer_name() {
-        return customer_name;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setCustomer_name(String customer_name) {
-        this.customer_name = customer_name;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public String getCustomerPhone() {
         return customerPhone;
-    }
+    } 
 
     public void setCustomerPhone(String customerPhone) {
         this.customerPhone = customerPhone;
@@ -76,11 +79,25 @@ public class OrderEntity {
         this.resourceEntity = resourceEntity;
     }
 
-    public UserEntity getUserEntity() {
-        return userEntity;
+    public UserEntity getShipper() {
+        return shipper;
     }
 
-    public void setUserEntity(UserEntity userEntity) {
-        this.userEntity = userEntity;
+    public void setShipper(UserEntity shipper) {
+        this.shipper = shipper;
+    }
+    
+    /**
+     * @return the userCreated
+     */
+    public UserEntity getUserCreated() {
+        return userCreated;
+    }
+
+    /**
+     * @param userCreated the userCreated to set
+     */
+    public void setUserCreated(UserEntity userCreated) {
+        this.userCreated = userCreated;
     }
 }

@@ -36,6 +36,9 @@
     <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
+    
+    <bean id="userDAO" class="com.td.trongnghia.daoImpl.UserDAO" />
+    <bean id="orderDAO" class="com.td.trongnghia.daoImpl.OrderDAO" />     
 
     <tx:annotation-driven transaction-manager="transactionManager"/>    
 

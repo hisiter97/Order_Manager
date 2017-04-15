@@ -26,7 +26,7 @@ public class GenericDAO<T>{
     
     public List<T> findAll(){
         Session session = sessionFactory.getCurrentSession();        
-        String sql = "FROM " + this.persistenceClass;
+        String sql = "FROM " + ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]).getName();
         return (List<T>)session.createQuery(sql).list();
     };
     

@@ -19,10 +19,12 @@ public class MainApp extends Application{
 
     @Override
     public void start(Stage stage) throws Exception {   
-        Scene scene = new Scene(new StackPane());
+        Scene scene = new Scene(new StackPane(), 800, 600);
         Manager manager = new Manager(scene);
         manager.showLoginScreen();
-        stage.setScene(scene);
+        stage.setScene(scene);  
+        stage.setResizable(false);
+        stage.setMaximized(true);
         stage.show();
     }
     
