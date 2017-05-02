@@ -8,7 +8,7 @@ package com.td.trongnghia.uiController;
 import com.td.trongnghia.constants.UIConstants;
 import com.td.trongnghia.daoImpl.UserDAO;
 import com.td.trongnghia.entity.UserEntity;
-import com.td.trongnghia.manager.Manager;
+import com.td.trongnghia.manager.AppManager;
 import com.td.trongnghia.util.Util;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -34,12 +34,13 @@ public class LoginController {
     @FXML
     private TextField password;
     @FXML
-    private Button loginButton;    
+    private Button loginButton;
 
-    public void initialize() {
+    @FXML
+    private void initialize() {
     }
 
-    public void initManager(final Manager manager) {
+    public void initManager(final AppManager appManager) {
         loginButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -51,10 +52,10 @@ public class LoginController {
                                 .title(UIConstants.TASK_DONE)
                                 .text(userLogIn.getUserName() + " has logged in")
                                 .showInformation();
-                        Manager.userLoggedIn = userLogIn;
-                        manager.showMainScreen();
+                        AppManager.userLoggedIn = userLogIn;
+                        appManager.showMainScreen();
                     } else {
-                        loginFailed = true;                        
+                        loginFailed = true;
                     }
                 } catch (NoSuchAlgorithmException ex) {
                     loginFailed = true;
@@ -63,11 +64,11 @@ public class LoginController {
                     loginFailed = true;
                     Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                if (loginFailed){
+                if (loginFailed) {
                     Notifications.create()
-                                .title(UIConstants.TASK_FAILED)
-                                .text("Username/password wrong")
-                                .showError();
+                            .title(UIConstants.TASK_FAILED)
+                            .text("Username/password wrong or something crashes the system!")
+                            .showError();
                 }
             }
         });

@@ -3,15 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.td.trongnghia.dao;
-
-import java.util.List;
+package com.td.trongnghia.constants;
 
 /**
  *
  * @author TRONGNGHIA
  */
-public interface DAO<T> {
-    List findAll();
-    T save(T instance);
+public class DBConstants {
+    public static String ADMIN_ROLE = "ADMIN";
+    public static String SHIPPER_ROLE = "SHIPPER";
 }

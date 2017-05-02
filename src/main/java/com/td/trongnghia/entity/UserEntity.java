@@ -1,5 +1,6 @@
 package com.td.trongnghia.entity;
 
+import java.io.Serializable;
 import javax.persistence.*;
 
 /**
@@ -7,7 +8,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "users")
-public class UserEntity {
+public class UserEntity implements Serializable{
     @Id
     @Column(name = "user_id")
     @GeneratedValue

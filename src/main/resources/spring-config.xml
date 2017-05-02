@@ -14,7 +14,7 @@
         <property name="driverClassName" value="org.postgresql.Driver"/>
         <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>
         <property name="username" value="postgres"/>
-        <property name="password" value="manuteam"/>
+        <property name="password" value="manuteam"/>        
         <property name="validationQuery" value="SELECT 1"/>
     </bean>
 
@@ -29,6 +29,7 @@
             <value>
                 hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
                 hibernate.hbm2ddl.auto=update
+                hibernate.show_sql=true
             </value>
         </property>
     </bean>
@@ -39,6 +40,8 @@
     
     <bean id="userDAO" class="com.td.trongnghia.daoImpl.UserDAO" />
     <bean id="orderDAO" class="com.td.trongnghia.daoImpl.OrderDAO" />     
+    <bean id="resourceDAO" class="com.td.trongnghia.daoImpl.ResourceDAO" />
+    <bean id="orderResourceDAO" class="com.td.trongnghia.daoImpl.OrderResourceDAO" />
 
     <tx:annotation-driven transaction-manager="transactionManager"/>    
 

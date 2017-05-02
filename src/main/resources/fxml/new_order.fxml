@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane focusTraversable="false" maxWidth="-1.0" prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.td.trongnghia.uiController.NewOrderController">
+   <children>
+      <StackPane prefHeight="493.0" prefWidth="1055.0" />
+      <Pane prefHeight="195.0" prefWidth="1346.0">
+         <children>
+            <TextField id="newCustomerName" fx:id="customerNameTF" editable="false" layoutX="14.0" layoutY="57.0" prefHeight="25.0" prefWidth="174.0" promptText="Customer Name" />
+            <Button fx:id="addOrderBtn" layoutX="17.0" layoutY="669.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="566.0" text="Add order" />
+            <ChoiceBox fx:id="shipperCB" layoutX="14.0" layoutY="127.0" prefHeight="25.0" prefWidth="174.0">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="Item 1" />
+                     <String fx:value="Item 2" />
+                     <String fx:value="Item 3" />
+                  </FXCollections>
+               </items>
+            </ChoiceBox>
+            <ChoiceBox id="resourceNameCB" fx:id="resourceCB" layoutX="15.0" layoutY="201.0" prefHeight="25.0" prefWidth="174.0">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="Item 1" />
+                     <String fx:value="Item 2" />
+                     <String fx:value="Item 3" />
+                  </FXCollections>
+               </items>
+            </ChoiceBox>
+            <TextField id="newCustomerPhone" fx:id="customerPhoneTF" editable="false" layoutX="211.0" layoutY="57.0" prefHeight="25.0" prefWidth="174.0" promptText="Customer Phone" />
+            <Label layoutX="14.0" layoutY="104.0" text="Choose a shipper" />
+            <Label layoutX="16.0" layoutY="180.0" text="Choose a resource" />
+            <DatePicker fx:id="dateOrderedPK" layoutX="211.0" layoutY="127.0" prefHeight="25.0" prefWidth="174.0" promptText="Date to order" />
+            <Label layoutX="211.0" layoutY="104.0" text="Choose when to order this" />
+            <Label layoutX="14.0" layoutY="17.0" text="NEW ORDER INFORMATION">
+               <effect>
+                  <Glow />
+               </effect>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField id="newCustomerID" fx:id="customerIdTF" editable="false" layoutX="404.0" layoutY="57.0" prefHeight="25.0" prefWidth="174.0" promptText="Customer ID" />
+            <Button fx:id="cancelBtn" layoutX="704.0" layoutY="669.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="637.0" text="Cancel" />
+            <TableView fx:id="customersTable" layoutX="704.0" layoutY="52.0" prefHeight="539.0" prefWidth="637.0" />
+            <Label layoutX="704.0" layoutY="19.0" text="CUSTOMERS" />
+            <TextField id="newCustomerID" fx:id="newCustomerIdTF" layoutX="1055.0" layoutY="605.0" prefHeight="25.0" prefWidth="166.0" promptText="Customer ID" />
+            <TextField id="newCustomerPhone" fx:id="newCustomerPhoneTF" layoutX="879.0" layoutY="605.0" prefHeight="25.0" prefWidth="166.0" promptText="Customer Phone" />
+            <TextField id="newCustomerName" fx:id="newCustomerNameTF" layoutX="704.0" layoutY="605.0" prefHeight="25.0" prefWidth="166.0" promptText="Customer Name" />
+            <Button fx:id="addCusBtn" layoutX="1239.0" layoutY="605.0" mnemonicParsing="false" text="Add Customer" />
+            <Label layoutX="404.0" layoutY="104.0" text="Choose a business type" />
+            <ChoiceBox fx:id="businessTypeCB" layoutX="404.0" layoutY="127.0" prefHeight="25.0" prefWidth="174.0">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="Item 1" />
+                     <String fx:value="Item 2" />
+                     <String fx:value="Item 3" />
+                  </FXCollections>
+               </items>
+            </ChoiceBox>
+            <TableView fx:id="resourcesOrderTable" layoutX="15.0" layoutY="256.0" prefHeight="374.0" prefWidth="566.0" />
+            <Label layoutX="16.0" layoutY="240.0" text="Resources Order" />
+            <Label layoutX="211.0" layoutY="180.0" text="Select quantity" />
+            <Button fx:id="addResourceBtn" layoutX="404.0" layoutY="201.0" mnemonicParsing="false" text="Add resource" />
+            <Separator layoutX="14.0" layoutY="163.0" prefHeight="14.0" prefWidth="566.0" />
+            <TextField fx:id="quantityTF" layoutX="213.0" layoutY="201.0" prefHeight="25.0" prefWidth="174.0" text="1" />
+            <Separator layoutX="17.0" layoutY="647.0" prefHeight="14.0" prefWidth="1327.0" />
+         </children>
+      </Pane>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</StackPane>

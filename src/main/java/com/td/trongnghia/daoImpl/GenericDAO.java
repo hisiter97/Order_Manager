@@ -1,7 +1,6 @@
 package com.td.trongnghia.daoImpl;
 
-import com.td.trongnghia.dao.DAO;
-import com.td.trongnghia.entity.UserEntity;
+import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import org.hibernate.Session;
@@ -30,9 +29,10 @@ public class GenericDAO<T>{
         return (List<T>)session.createQuery(sql).list();
     };
     
-    public void save(T instance){
+    public T save(T instance){
         Session session = sessionFactory.getCurrentSession();
         session.save(instance);
+        return instance;
     };
     
     public void update(T instance){
