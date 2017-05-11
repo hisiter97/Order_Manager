@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="126.0" prefWidth="328.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.td.trongnghia.uiController.PaymentController">
+   <children>
+      <Label layoutX="35.0" layoutY="50.0" text="Nhập số tiền" />
+      <TextField fx:id="paymentTF" layoutX="124.0" layoutY="46.0" prefHeight="25.0" prefWidth="136.0" />
+      <Label layoutX="271.0" layoutY="50.0" text=",000" />
+      <Button fx:id="confirmBtn" layoutX="239.0" layoutY="86.0" mnemonicParsing="false" text="Xác nhận" />
+   </children>
+</AnchorPane>

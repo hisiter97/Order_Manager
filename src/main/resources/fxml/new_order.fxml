@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import jfxtras.scene.control.*?>
+<?import tornadofx.control.*?>
 <?import java.lang.*?>
 <?import javafx.collections.*?>
 <?import javafx.geometry.*?>
@@ -13,8 +15,8 @@
       <StackPane prefHeight="493.0" prefWidth="1055.0" />
       <Pane prefHeight="195.0" prefWidth="1346.0">
          <children>
-            <TextField id="newCustomerName" fx:id="customerNameTF" editable="false" layoutX="14.0" layoutY="57.0" prefHeight="25.0" prefWidth="174.0" promptText="Customer Name" />
-            <Button fx:id="addOrderBtn" layoutX="17.0" layoutY="669.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="566.0" text="Add order" />
+            <TextField id="newCustomerName" fx:id="customerNameTF" editable="false" layoutX="14.0" layoutY="57.0" prefHeight="25.0" prefWidth="174.0" promptText="Tên khách hàng" />
+            <Button fx:id="addOrderBtn" layoutX="17.0" layoutY="669.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="566.0" text="Lưu hóa đơn" />
             <ChoiceBox fx:id="shipperCB" layoutX="14.0" layoutY="127.0" prefHeight="25.0" prefWidth="174.0">
                <items>
                   <FXCollections fx:factory="observableArrayList">
@@ -24,7 +26,7 @@
                   </FXCollections>
                </items>
             </ChoiceBox>
-            <ChoiceBox id="resourceNameCB" fx:id="resourceCB" layoutX="15.0" layoutY="201.0" prefHeight="25.0" prefWidth="174.0">
+            <ChoiceBox id="resourceNameCB" fx:id="resourceCB" layoutX="15.0" layoutY="245.0" prefHeight="25.0" prefWidth="174.0">
                <items>
                   <FXCollections fx:factory="observableArrayList">
                      <String fx:value="Item 1" />
@@ -33,12 +35,11 @@
                   </FXCollections>
                </items>
             </ChoiceBox>
-            <TextField id="newCustomerPhone" fx:id="customerPhoneTF" editable="false" layoutX="211.0" layoutY="57.0" prefHeight="25.0" prefWidth="174.0" promptText="Customer Phone" />
-            <Label layoutX="14.0" layoutY="104.0" text="Choose a shipper" />
-            <Label layoutX="16.0" layoutY="180.0" text="Choose a resource" />
-            <DatePicker fx:id="dateOrderedPK" layoutX="211.0" layoutY="127.0" prefHeight="25.0" prefWidth="174.0" promptText="Date to order" />
-            <Label layoutX="211.0" layoutY="104.0" text="Choose when to order this" />
-            <Label layoutX="14.0" layoutY="17.0" text="NEW ORDER INFORMATION">
+            <TextField id="newCustomerPhone" fx:id="customerPhoneTF" editable="false" layoutX="211.0" layoutY="57.0" prefHeight="25.0" prefWidth="174.0" promptText="SĐT khách hàng" />
+            <Label layoutX="14.0" layoutY="104.0" text="Chọn người giao" />
+            <Label layoutX="16.0" layoutY="226.0" text="Chọn thiết bị" />
+            <Label layoutX="13.0" layoutY="163.0" text="Chọn thời điểm giao" />
+            <Label layoutX="14.0" layoutY="17.0" text="THÔNG TIN HÓA ĐƠN">
                <effect>
                   <Glow />
                </effect>
@@ -46,15 +47,15 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <TextField id="newCustomerID" fx:id="customerIdTF" editable="false" layoutX="404.0" layoutY="57.0" prefHeight="25.0" prefWidth="174.0" promptText="Customer ID" />
-            <Button fx:id="cancelBtn" layoutX="704.0" layoutY="669.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="637.0" text="Cancel" />
-            <TableView fx:id="customersTable" layoutX="704.0" layoutY="52.0" prefHeight="539.0" prefWidth="637.0" />
-            <Label layoutX="704.0" layoutY="19.0" text="CUSTOMERS" />
-            <TextField id="newCustomerID" fx:id="newCustomerIdTF" layoutX="1055.0" layoutY="605.0" prefHeight="25.0" prefWidth="166.0" promptText="Customer ID" />
-            <TextField id="newCustomerPhone" fx:id="newCustomerPhoneTF" layoutX="879.0" layoutY="605.0" prefHeight="25.0" prefWidth="166.0" promptText="Customer Phone" />
-            <TextField id="newCustomerName" fx:id="newCustomerNameTF" layoutX="704.0" layoutY="605.0" prefHeight="25.0" prefWidth="166.0" promptText="Customer Name" />
-            <Button fx:id="addCusBtn" layoutX="1239.0" layoutY="605.0" mnemonicParsing="false" text="Add Customer" />
-            <Label layoutX="404.0" layoutY="104.0" text="Choose a business type" />
+            <TextField id="newCustomerID" fx:id="customerIdTF" editable="false" layoutX="404.0" layoutY="57.0" prefHeight="25.0" prefWidth="174.0" promptText="CMND khách hàng" />
+            <Button fx:id="cancelBtn" layoutX="704.0" layoutY="669.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="637.0" text="Hủy" />
+            <TableView fx:id="customersTable" layoutX="704.0" layoutY="52.0" prefHeight="507.0" prefWidth="637.0" />
+            <Label layoutX="704.0" layoutY="19.0" text="DANH SÁCH KHÁCH HÀNG TRONG CSDL" />
+            <TextField id="newCustomerID" fx:id="newCustomerIdTF" layoutX="1055.0" layoutY="574.0" prefHeight="25.0" prefWidth="166.0" promptText="CMND khách hàng" />
+            <TextField id="newCustomerPhone" fx:id="newCustomerPhoneTF" layoutX="879.0" layoutY="574.0" prefHeight="25.0" prefWidth="166.0" promptText="SĐT khách hàng" />
+            <TextField id="newCustomerName" fx:id="newCustomerNameTF" layoutX="704.0" layoutY="574.0" prefHeight="25.0" prefWidth="166.0" promptText="Tên khách hàng" />
+            <Button fx:id="addCusBtn" layoutX="1239.0" layoutY="597.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" text="Tạo mới" />
+            <Label layoutX="404.0" layoutY="104.0" text="Chọn loại giao dịch" />
             <ChoiceBox fx:id="businessTypeCB" layoutX="404.0" layoutY="127.0" prefHeight="25.0" prefWidth="174.0">
                <items>
                   <FXCollections fx:factory="observableArrayList">
@@ -64,13 +65,36 @@
                   </FXCollections>
                </items>
             </ChoiceBox>
-            <TableView fx:id="resourcesOrderTable" layoutX="15.0" layoutY="256.0" prefHeight="374.0" prefWidth="566.0" />
-            <Label layoutX="16.0" layoutY="240.0" text="Resources Order" />
-            <Label layoutX="211.0" layoutY="180.0" text="Select quantity" />
-            <Button fx:id="addResourceBtn" layoutX="404.0" layoutY="201.0" mnemonicParsing="false" text="Add resource" />
-            <Separator layoutX="14.0" layoutY="163.0" prefHeight="14.0" prefWidth="566.0" />
-            <TextField fx:id="quantityTF" layoutX="213.0" layoutY="201.0" prefHeight="25.0" prefWidth="174.0" text="1" />
+            <TableView fx:id="resourcesOrderTable" layoutX="15.0" layoutY="301.0" prefHeight="329.0" prefWidth="566.0" />
+            <Label layoutX="14.0" layoutY="276.0" text="Danh sách thiết bị trong hóa đơn" />
+            <Label layoutX="213.0" layoutY="226.0" text="Chọn số lượng" />
+            <Button fx:id="addResourceBtn" layoutX="404.0" layoutY="245.0" mnemonicParsing="false" text="Thêm vào hóa đơn" />
+            <Separator layoutX="15.0" layoutY="212.0" prefHeight="14.0" prefWidth="566.0" />
+            <TextField fx:id="quantityTF" layoutX="213.0" layoutY="245.0" prefHeight="25.0" prefWidth="174.0" text="1" />
             <Separator layoutX="17.0" layoutY="647.0" prefHeight="14.0" prefWidth="1327.0" />
+            <LocalDateTimeTextField fx:id="dateOrderedPK" layoutX="15.0" layoutY="186.0" prefHeight="25.0" prefWidth="174.0" />
+            <Text fx:id="editTxt" layoutX="211.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+            <TextField fx:id="plannedDaysTF" layoutX="211.0" layoutY="187.0" prefHeight="25.0" prefWidth="112.0" promptText="1, 2, 3, 4, ..." />
+            <Label layoutX="211.0" layoutY="163.0" text="Số ngày thuê dự kiến" />
+            <TextField fx:id="plannedDateReturnedTF" editable="false" layoutX="345.0" layoutY="186.0" prefHeight="25.0" prefWidth="156.0" />
+            <Label layoutX="347.0" layoutY="163.0" text="Thời điểm trả dự kiến" />
+            <Label layoutX="211.0" layoutY="103.0" text="Chọn người nhận" />
+            <ChoiceBox fx:id="receiverCB" layoutX="211.0" layoutY="126.0" prefHeight="25.0" prefWidth="174.0">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="Item 1" />
+                     <String fx:value="Item 2" />
+                     <String fx:value="Item 3" />
+                  </FXCollections>
+               </items>
+            </ChoiceBox>
+            <TextField id="newCustomerName" fx:id="newCustomerAddrTF" layoutX="704.0" layoutY="618.0" prefHeight="25.0" prefWidth="517.0" promptText="Địa chỉ khách hàng" />
+            <TextField fx:id="shipPaymentTF" alignment="CENTER_RIGHT" layoutX="519.0" layoutY="187.0" prefHeight="25.0" prefWidth="61.0" />
+            <Label layoutX="522.0" layoutY="163.0" text="Phí giao" />
+            <Label layoutX="582.0" layoutY="191.0" text=",000" />
+            <Label layoutX="611.0" layoutY="163.0" text="Cọc" />
+            <TextField fx:id="depositTF" layoutX="609.0" layoutY="187.0" prefHeight="25.0" prefWidth="61.0" />
+            <Label layoutX="673.0" layoutY="192.0" text=",000" />
          </children>
       </Pane>
    </children>

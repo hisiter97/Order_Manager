@@ -3,9 +3,8 @@ package com.td.trongnghia.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * Created by TRONGNGHIA on 3/28/2017.
@@ -21,12 +20,17 @@ public class OrderEntity implements Serializable {
     @OneToOne
     @JoinColumn(name = "shipper")
     private UserEntity shipper;
+    @OneToOne
+    @JoinColumn(name = "receiver")
+    private UserEntity receiver;
     @Column(name = "date_created")
     private Timestamp dateCreated;
+    @Column(name = "date_modified")
+    private Timestamp dateModified;
     @Column(name = "date_shipped")
     private Timestamp dateShipped;
     @Column(name = "date_returned")
-    private Date dateReturned;
+    private Timestamp dateReturned;
     @OneToOne
     @JoinColumn(name = "customer_id")
     private CustomerEntity customerEntity;
@@ -36,14 +40,22 @@ public class OrderEntity implements Serializable {
     @OneToOne
     @JoinColumn(name = "user_created")
     private UserEntity userCreated;
-    @Column(name = "payment")
-    private Integer payment;
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "orders_resources", joinColumns = {
-//        @JoinColumn(name = "order_id")},
-//            inverseJoinColumns = {
-//                @JoinColumn(name = "resource_id")})
-//    private List<ResourceEntity> resourceEntities;
+    @Column(name = "planned_payment")
+    private Double plannedPayment = 0.0;
+    @Column(name = "supp_payment")
+    private Double suppPayment = 0.0;
+    @Column(name = "final_payment")
+    private Double finalPayment = 0.0;
+    @Column(name = "shipper_payment")
+    private Double shipperPayment = 0.0;
+    @Column(name = "receiver_payment")
+    private Double receiverPayment = 0.0;
+    @Column(name = "status")
+    private Integer status = 0;
+    @Column(name = "ship_payment")
+    private Double shipPayment = 0.0;
+    @Column(name = "deposit")
+    private Integer deposit;
 
     /**
      * @return the orderId
@@ -74,6 +86,20 @@ public class OrderEntity implements Serializable {
     }
 
     /**
+     * @return the receiver
+     */
+    public UserEntity getReceiver() {
+        return receiver;
+    }
+
+    /**
+     * @param receiver the receiver to set
+     */
+    public void setReceiver(UserEntity receiver) {
+        this.receiver = receiver;
+    }
+
+    /**
      * @return the dateCreated
      */
     public Timestamp getDateCreated() {
@@ -85,6 +111,20 @@ public class OrderEntity implements Serializable {
      */
     public void setDateCreated(Timestamp dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    /**
+     * @return the dateModified
+     */
+    public Timestamp getDateModified() {
+        return dateModified;
+    }
+
+    /**
+     * @param dateModified the dateModified to set
+     */
+    public void setDateModified(Timestamp dateModified) {
+        this.dateModified = dateModified;
     }
 
     /**
@@ -102,16 +142,16 @@ public class OrderEntity implements Serializable {
     }
 
     /**
-     * @return the dateReturn
+     * @return the dateReturned
      */
-    public Date getDateReturned() {
+    public Timestamp getDateReturned() {
         return dateReturned;
     }
 
     /**
-     * @param dateReturn the dateReturn to set
+     * @param dateReturned the dateReturned to set
      */
-    public void setDateReturned(Date dateReturned) {
+    public void setDateReturned(Timestamp dateReturned) {
         this.dateReturned = dateReturned;
     }
 
@@ -158,30 +198,118 @@ public class OrderEntity implements Serializable {
     }
 
     /**
-     * @return the payment
+     * @return the plannedPayment
      */
-    public Integer getPayment() {
-        return payment;
+    public Double getPlannedPayment() {
+        return plannedPayment;
     }
 
     /**
-     * @param payment the payment to set
+     * @param plannedPayment the plannedPayment to set
      */
-    public void setPayment(Integer payment) {
-        this.payment = payment;
+    public void setPlannedPayment(Double plannedPayment) {
+        this.plannedPayment = plannedPayment;
     }
 
-//    /**
-//     * @return the resourceEntities
-//     */
-//    public List<ResourceEntity> getResourceEntities() {
-//        return resourceEntities;
-//    }
-//
-//    /**
-//     * @param resourceEntities the resourceEntities to set
-//     */
-//    public void setResourceEntities(List<ResourceEntity> resourceEntities) {
-//        this.resourceEntities = resourceEntities;
-//    }
+    /**
+     * @return the suppPayment
+     */
+    public Double getSuppPayment() {
+        return suppPayment;
+    }
+
+    /**
+     * @param suppPayment the suppPayment to set
+     */
+    public void setSuppPayment(Double suppPayment) {
+        this.suppPayment = suppPayment;
+    }
+
+    /**
+     * @return the finalPayment
+     */
+    public Double getFinalPayment() {
+        return finalPayment;
+    }
+
+    /**
+     * @param finalPayment the finalPayment to set
+     */
+    public void setFinalPayment(Double finalPayment) {
+        this.finalPayment = finalPayment;
+    }
+
+    /**
+     * @return the shipperPayment
+     */
+    public Double getShipperPayment() {
+        return shipperPayment;
+    }
+
+    /**
+     * @param shipperPayment the shipperPayment to set
+     */
+    public void setShipperPayment(Double shipperPayment) {
+        this.shipperPayment = shipperPayment;
+    }
+
+    /**
+     * @return the receiverPayment
+     */
+    public Double getReceiverPayment() {
+        return receiverPayment;
+    }
+
+    /**
+     * @param receiverPayment the receiverPayment to set
+     */
+    public void setReceiverPayment(Double receiverPayment) {
+        this.receiverPayment = receiverPayment;
+    }
+
+    /**
+     * @return the status
+     */
+    public Integer getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public StringProperty finalPayment() {
+        return new SimpleStringProperty(finalPayment.toString());
+    }
+
+    /**
+     * @return the shipPayment
+     */
+    public Double getShipPayment() {
+        return shipPayment;
+    }
+
+    /**
+     * @param shipPayment the shipPayment to set
+     */
+    public void setShipPayment(Double shipPayment) {
+        this.shipPayment = shipPayment;
+    }
+
+    /**
+     * @return the deposit
+     */
+    public Integer getDeposit() {
+        return deposit;
+    }
+
+    /**
+     * @param deposit the deposit to set
+     */
+    public void setDeposit(Integer deposit) {
+        this.deposit = deposit;
+    }
 }

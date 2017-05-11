@@ -21,20 +21,6 @@ import javax.persistence.Table;
 @Table(name = "orders_resources")
 public class OrderResourceEntity {
 
-    /**
-     * @return the quantity
-     */
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    /**
-     * @param quantity the quantity to set
-     */
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
     @Id
     @Column(name = "orders_resources_id")
     @GeneratedValue
@@ -47,9 +33,12 @@ public class OrderResourceEntity {
     @OneToOne
     @JoinColumn(name = "resource_id")
     private ResourceEntity resourceEntity;
-    
+
     @Column(name = "quantity")
     private Integer quantity;
+
+    @Column(name = "payment")
+    private Double payment;
 
     /**
      * @return the ordersResourcesId
@@ -91,5 +80,33 @@ public class OrderResourceEntity {
      */
     public void setResourceEntity(ResourceEntity resourceEntity) {
         this.resourceEntity = resourceEntity;
+    }
+
+    /**
+     * @return the payment
+     */
+    public Double getPayment() {
+        return payment;
+    }
+
+    /**
+     * @param payment the payment to set
+     */
+    public void setPayment(Double payment) {
+        this.payment = payment;
+    }
+
+    /**
+     * @return the quantity
+     */
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    /**
+     * @param quantity the quantity to set
+     */
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }

@@ -15,6 +15,7 @@ public class ResourceOrderDTO {
 
     private ResourceEntity resourceEntity;
     private Integer quantity;
+    private Double payment;
 
     /**
      * @return the resourceEntity
@@ -42,5 +43,19 @@ public class ResourceOrderDTO {
      */
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    /**
+     * @return the payment
+     */
+    public Double getPayment() {
+        return payment;
+    }
+
+    /**
+     * @param payment the payment to set
+     */
+    public void setPayment(Double payment) {
+        this.payment = payment;
     }
 }

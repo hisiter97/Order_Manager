@@ -10,15 +10,18 @@ import com.td.trongnghia.elements.DateEditingCell;
 import com.td.trongnghia.entity.OrderEntity;
 import com.td.trongnghia.entity.OrderResourceEntity;
 import com.td.trongnghia.entity.ResourceEntity;
-import com.td.trongnghia.entity.UserEntity;
 import com.td.trongnghia.manager.AppManager;
 import com.td.trongnghia.util.Util;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -35,10 +38,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
@@ -52,15 +58,15 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 import org.controlsfx.control.table.TableFilter;
-import org.springframework.dao.DataIntegrityViolationException;
 
 /**
  * FXML Controller class
  *
  * @author TRONGNGHIA
  */
-public class MainController {
+public class OverviewController {
 
     @FXML
     private TableView<OrderEntity> orderTable;
@@ -68,10 +74,6 @@ public class MainController {
     private TableView<OrderResourceEntity> orderDetailTable;
     @FXML
     private TableView<ResourceEntity> resourcesTable;
-    @FXML
-    private TableView<UserEntity> usersTable;
-    @FXML
-    private Button newOrderBtn;
     @FXML
     private TextField totalOrdersCreatedTF;
     @FXML
@@ -82,14 +84,6 @@ public class MainController {
     private TextField invoiceTF;
     @FXML
     private TextField realInvoiceTF;
-    @FXML
-    private TextField resourceNameTF;
-    @FXML
-    private TextField resourceDescTF;
-    @FXML
-    private TextField resourceOrigPriceTF;
-    @FXML
-    private TextField resourceRentPriceTF;
     @FXML
     private TextField shipperPaymentTF;
     @FXML
@@ -107,28 +101,24 @@ public class MainController {
     @FXML
     private TextField shipPaymentTF;
     @FXML
-    private Button addResourceBtn;
+    private DatePicker datePicker;
     @FXML
-    private Button viewHistoryBtn;
+    private ComboBox<Integer> monthPicker;
+    @FXML
+    private ComboBox<Integer> yearPicker;
+    @FXML
+    private Button viewBtn;
+    @FXML
+    private Button viewByMonthBtn;
+    @FXML
+    private Label statLbl;
+    @FXML
+    private Button backBtn;
     @FXML
     private Button printBtn;
-    @FXML
-    private Button addUserBtn;
-    @FXML
-    private Tab resourceTab;
-    @FXML
-    private Tab userTab;
-    @FXML
-    private TabPane tabPane;
-    @FXML
-    private Button signOutBtn;
     private ObservableList<OrderEntity> orderObservableList;
     private ObservableList<OrderResourceEntity> orderDetailObservableList;
     private ObservableList<OrderEntity> orderObservableBackingList;
-    private ObservableList<ResourceEntity> resourceObservableList;
-    private ObservableList<ResourceEntity> resourceObservableBackingList;
-    private ObservableList<UserEntity> userObservableList;
-    private ObservableList<UserEntity> userObservableBackingList;
 
     private OrderEntity orderSelected;
 
@@ -140,44 +130,96 @@ public class MainController {
     @FXML
     private void initialize() {
         orderTable.setEditable(true);
-        Calendar cal = Calendar.getInstance(Locale.FRANCE);
-        cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
-        cal.clear(Calendar.MINUTE);
-        cal.clear(Calendar.SECOND);
-        cal.clear(Calendar.MILLISECOND);
-        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-        java.sql.Date firstDate = new java.sql.Date(cal.getTime().getTime());
-        cal.add(Calendar.DAY_OF_WEEK, 7);
-        java.sql.Date lastDate = new java.sql.Date(cal.getTime().getTime());
+        this.orderObservableList = FXCollections.observableArrayList(new ArrayList<OrderEntity>());
 
-        List<OrderEntity> orderEntities = Util.orderDAO.getCurrentOrders(firstDate, lastDate);
-        this.orderObservableList = FXCollections.observableArrayList(orderEntities);
+        statistics();
 
-        tabPane.getSelectionModel().selectedItemProperty()
-                .addListener((obs, oldTab, newTab) -> {
-                    if (newTab == resourceTab) {
-                        if (this.resourceObservableList == null) {
-                            List<ResourceEntity> resourceEntities = Util.resourceDAO.findAll();
-                            this.resourceObservableList = FXCollections.observableArrayList(resourceEntities);
-                            loadResourcesTable();
-                        }
-                    } else if (newTab == userTab) {
-                        if (this.userObservableList == null) {
-                            List<UserEntity> userEntities = Util.userDAO.findAll();
-                            this.userObservableList = FXCollections.observableArrayList(userEntities);
-                            loadUsersTable();
+        final Callback<DatePicker, DateCell> dayCellFactory
+                = new Callback<DatePicker, DateCell>() {
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (item.getDayOfWeek() != DayOfWeek.MONDAY) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb;");
                         }
                     }
-                });
+                };
+            }
+        };
 
-        addUserBtn.setOnAction(new EventHandler<ActionEvent>() {
+        Integer[] months = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+        monthPicker.setItems(FXCollections.observableArrayList(Arrays.asList(months)));
+        monthPicker.setValue(1);
+        Integer[] years = {2017, 2018};
+        yearPicker.setItems(FXCollections.observableArrayList(Arrays.asList(years)));
+        yearPicker.setValue(2017);
+
+        Locale.setDefault(Locale.UK);
+        datePicker.setDayCellFactory(dayCellFactory);
+        datePicker.setShowWeekNumbers(true);
+        datePicker.setConverter(new StringConverter<LocalDate>() {
+            private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
             @Override
-            public void handle(ActionEvent event) {
-                showUserDialog(null);
+            public String toString(LocalDate localDate) {
+                if (localDate == null) {
+                    return "";
+                }
+                return dateTimeFormatter.format(localDate);
+            }
+
+            @Override
+            public LocalDate fromString(String dateString) {
+                if (dateString == null || dateString.trim().isEmpty()) {
+                    return null;
+                }
+                return LocalDate.parse(dateString, dateTimeFormatter);
             }
         });
 
-        statistics();
+        viewBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                LocalDate localDate = datePicker.getValue();
+                Calendar cal = Calendar.getInstance(Locale.FRANCE);
+                java.sql.Date firstDate = java.sql.Date.valueOf(localDate);
+                cal.setTimeInMillis(firstDate.getTime());
+                cal.add(Calendar.DATE, 7);
+                java.sql.Date lastDate = new java.sql.Date(cal.getTime().getTime());
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                statLbl.setText("THỐNG KÊ TUẦN " + formatter.format(firstDate) + " đến " + formatter.format(lastDate));
+                orderObservableList.clear();
+                orderObservableList.addAll(FXCollections.observableArrayList(Util.orderDAO.findByTimePeriod(firstDate, lastDate)));
+                orderTable.refresh();
+                statistics();
+            }
+        });
+
+        viewByMonthBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Integer month = monthPicker.getValue();
+                Integer year = yearPicker.getValue();
+                Calendar cal = Calendar.getInstance();
+                cal.clear();
+                cal.set(Calendar.DAY_OF_MONTH, 1);
+                cal.set(Calendar.MONTH, month - 1);
+                cal.set(Calendar.YEAR, year);
+                java.sql.Date firstDate = new java.sql.Date(cal.getTime().getTime());
+                cal.add(Calendar.MONTH, 1);
+                java.sql.Date lastDate = new java.sql.Date(cal.getTime().getTime());
+                statLbl.setText("THỐNG KÊ THÁNG " + month.toString() + "/" + year.toString());
+                orderObservableList.clear();
+                orderObservableList.addAll(FXCollections.observableArrayList(Util.orderDAO.findByTimePeriod(firstDate, lastDate)));
+                orderTable.refresh();
+                statistics();
+            }
+        });
     }
 
     public void initManager(final AppManager appManager, Scene scene) {
@@ -185,22 +227,10 @@ public class MainController {
         loadOrderTable(appManager);
         loadOrderDetailTable();
 
-        signOutBtn.setOnAction(new EventHandler<ActionEvent>() {
+        backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Util.userLogin = null;
-                appManager.showLoginScreen();
-            }
-        });
-
-        newOrderBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                openNewOrderWindow();
-            }
-
-            private void openNewOrderWindow() {
-                appManager.showNewOrderScreen(null);
+                appManager.showMainScreen();
             }
         });
 
@@ -224,24 +254,6 @@ public class MainController {
                 } catch (InvocationTargetException ex) {
                     Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
-        });
-
-        addResourceBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                showResourceDialog(null);
-            }
-        });
-
-        viewHistoryBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                openOverviewWindow();
-            }
-
-            private void openOverviewWindow() {
-                appManager.showOverviewScreen();
             }
         });
     }
@@ -289,8 +301,8 @@ public class MainController {
                 shipperPaymentTF.setText(Util.getMoneyNumber(currentOrder.getShipperPayment() * -1));
                 receiverPaymentTF.setText(Util.getMoneyNumber(currentOrder.getReceiverPayment() * -1));
                 plannedPaymentTF.setText(Util.getMoneyNumber(currentOrder.getPlannedPayment()));
-                suppPaymentTF.setText(Util.getMoneyNumber(currentOrder.getSuppPayment()));
                 shipPaymentTF.setText(Util.getMoneyNumber(currentOrder.getShipPayment()));
+                suppPaymentTF.setText(Util.getMoneyNumber(currentOrder.getSuppPayment()));
                 finalPaymentTF.setText(Util.getMoneyNumber(currentOrder.getFinalPayment()));
             }
         });
@@ -303,17 +315,20 @@ public class MainController {
             @Override
             public ObservableValue<String> call(CellDataFeatures<OrderEntity, String> data) {
                 String displayedString = null;
-                if (data.getValue().getStatus() == UIConstants.STATUS_SHIPPED) {
-                    displayedString = "Đã giao";
-                } else if (data.getValue().getStatus() == UIConstants.STATUS_RECEIVED) {
-                    displayedString = "Đã nhận";
-                } else {
-                    displayedString = "Mới tạo";
+                switch (data.getValue().getStatus()) {
+                    case 1:
+                        displayedString = "Đã giao";
+                        break;
+                    case 2:
+                        displayedString = "Đã nhận";
+                        break;
+                    default:
+                        displayedString = "Mới tạo";
+                        break;
                 }
                 return new SimpleStringProperty(displayedString);
             }
         });
-
         statusCol.setCellFactory(column -> {
             return new TableCell<OrderEntity, String>() {
                 @Override
@@ -355,6 +370,24 @@ public class MainController {
                         break;
                 }
                 return new SimpleStringProperty(displayedString);
+            }
+        });
+
+        TableColumn shipperCol = new TableColumn("Người giao");
+        shipperCol.setCellValueFactory(
+                new Callback<CellDataFeatures<OrderEntity, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(CellDataFeatures<OrderEntity, String> data) {
+                return new SimpleStringProperty(data.getValue().getShipper() == null ? null : data.getValue().getShipper().getName());
+            }
+        });
+
+        TableColumn receiverCol = new TableColumn("Người nhận");
+        receiverCol.setCellValueFactory(
+                new Callback<CellDataFeatures<OrderEntity, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(CellDataFeatures<OrderEntity, String> data) {
+                return new SimpleStringProperty(data.getValue().getReceiver() == null ? null : data.getValue().getReceiver().getName());
             }
         });
 
@@ -456,7 +489,7 @@ public class MainController {
         });
 
         orderTable.setItems(this.orderObservableList);
-        orderTable.getColumns().addAll(statusCol, depositCol, customerNameCol, customerPhoneCol, customerIdentCol, dateOrderedCol, dateReturnCol, dateCreatedCol, dateModifiedCol, userCreatedCol, businessTypeCol);
+        orderTable.getColumns().addAll(statusCol, depositCol, shipperCol, receiverCol, customerNameCol, customerPhoneCol, customerIdentCol, dateOrderedCol, dateReturnCol, dateCreatedCol, dateModifiedCol, userCreatedCol, businessTypeCol);
 
         orderTable.setRowFactory(new Callback<TableView<OrderEntity>, TableRow<OrderEntity>>() {
             @Override
@@ -519,21 +552,21 @@ public class MainController {
                     @Override
                     public void handle(ActionEvent event) {
                         OrderEntity currentOrder = row.getItem();
-                        showPaymentDialog(currentOrder, UIConstants.SHIPPER_PAYMENT);
+                        showPaymentDialog(currentOrder, UIConstants.SHIPPER_PAYMENT, mainScene);
                     }
                 });
                 receiverPaymentMenuItem.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
                         OrderEntity currentOrder = row.getItem();
-                        showPaymentDialog(currentOrder, UIConstants.RECEIVER_PAYMENT);
+                        showPaymentDialog(currentOrder, UIConstants.RECEIVER_PAYMENT, mainScene);
                     }
                 });
                 suppPaymentMenuItem.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
                         OrderEntity currentOrder = row.getItem();
-                        showPaymentDialog(currentOrder, UIConstants.SUPP_PAYMENT);
+                        showPaymentDialog(currentOrder, UIConstants.SUPP_PAYMENT, mainScene);
                     }
                 });
                 contextMenu.getItems().addAll(removeMenuItem, confirmShippedMenuItem, confirmReceivedMenuItem, shipperPaymentMenuItem, receiverPaymentMenuItem, suppPaymentMenuItem, editMenuItem);
@@ -552,211 +585,11 @@ public class MainController {
         this.orderObservableBackingList = tableFilter.getBackingList();
     }
 
-    private void loadResourcesTable() {
-        TableColumn resourceNameCol = new TableColumn("Tên thiết bị");
-        resourceNameCol.setCellValueFactory(
-                new Callback<CellDataFeatures<ResourceEntity, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(CellDataFeatures<ResourceEntity, String> data) {
-                return new SimpleStringProperty(data.getValue().getResourceName());
-            }
-        });
-
-        TableColumn resourceDescCol = new TableColumn("Mô tả");
-        resourceDescCol.setCellValueFactory(
-                new Callback<CellDataFeatures<ResourceEntity, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(CellDataFeatures<ResourceEntity, String> data) {
-                return new SimpleStringProperty(data.getValue().getDescription());
-            }
-        });
-
-        TableColumn resourceOrigPriceCol = new TableColumn("Giá gốc");
-        resourceOrigPriceCol.setCellValueFactory(
-                new Callback<CellDataFeatures<ResourceEntity, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(CellDataFeatures<ResourceEntity, String> data) {
-                return new SimpleStringProperty(data.getValue().getOriginalPrice().toString());
-            }
-        });
-
-        TableColumn resourceRentPriceCol = new TableColumn("Giá cho thuê ngày đầu");
-        resourceRentPriceCol.setCellValueFactory(
-                new Callback<CellDataFeatures<ResourceEntity, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(CellDataFeatures<ResourceEntity, String> data) {
-                return new SimpleStringProperty(data.getValue().getRentPrice().toString());
-            }
-        });
-
-        TableColumn quantityCol = new TableColumn("Số lượng");
-        quantityCol.setCellValueFactory(
-                new Callback<CellDataFeatures<ResourceEntity, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(CellDataFeatures<ResourceEntity, String> data) {
-                return new SimpleStringProperty(data.getValue().getQuantity() == null ? "0" : data.getValue().getQuantity().toString());
-            }
-        });
-
-        resourcesTable.setItems(this.resourceObservableList);
-        resourcesTable.getColumns().addAll(resourceNameCol, resourceDescCol, resourceOrigPriceCol, resourceRentPriceCol, quantityCol);
-
-        resourcesTable.setEditable(true);
-
-        //Filter on table like Excel
-        TableFilter resourceTableFilter = new TableFilter(resourcesTable);
-        this.resourceObservableBackingList = resourceTableFilter.getBackingList();
-
-        resourcesTable.setRowFactory(new Callback<TableView<ResourceEntity>, TableRow<ResourceEntity>>() {
-            @Override
-            public TableRow<ResourceEntity> call(TableView<ResourceEntity> tableView) {
-                final TableRow<ResourceEntity> row = new TableRow<>();
-                final ContextMenu contextMenu = new ContextMenu();
-                final MenuItem removeMenuItem = new MenuItem("Xóa");
-                final MenuItem editMenuItem = new MenuItem("Chỉnh sửa thông tin");
-                removeMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        ResourceEntity currentResource = row.getItem();
-                        removeResource(currentResource);
-                        resourcesTable.refresh();
-                    }
-                });
-                editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        ResourceEntity currentResource = row.getItem();
-                        showResourceDialog(currentResource);
-                        resourcesTable.refresh();
-                    }
-                });
-                contextMenu.getItems().addAll(removeMenuItem, editMenuItem);
-                // Set context menu on row, but use a binding to make it only show for non-empty rows:  
-                row.contextMenuProperty().bind(
-                        Bindings.when(row.emptyProperty())
-                                .then((ContextMenu) null)
-                                .otherwise(contextMenu)
-                );
-                return row;
-            }
-        });
-    }
-
-    private void loadUsersTable() {
-        TableColumn userNameCol = new TableColumn("Tên tài khoản");
-        userNameCol.setCellValueFactory(
-                new Callback<CellDataFeatures<UserEntity, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(CellDataFeatures<UserEntity, String> data) {
-                return new SimpleStringProperty(data.getValue().getUserName());
-            }
-        });
-
-        TableColumn nameCol = new TableColumn("Tên người dùng");
-        nameCol.setCellValueFactory(
-                new Callback<CellDataFeatures<UserEntity, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(CellDataFeatures<UserEntity, String> data) {
-                return new SimpleStringProperty(data.getValue().getName());
-            }
-        });
-
-        TableColumn emailCol = new TableColumn("Email");
-        emailCol.setCellValueFactory(
-                new Callback<CellDataFeatures<UserEntity, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(CellDataFeatures<UserEntity, String> data) {
-                return new SimpleStringProperty(data.getValue().getEmail());
-            }
-        });
-
-        TableColumn phoneCol = new TableColumn("Số điện thoại");
-        phoneCol.setCellValueFactory(
-                new Callback<CellDataFeatures<UserEntity, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(CellDataFeatures<UserEntity, String> data) {
-                return new SimpleStringProperty(data.getValue().getPhone());
-            }
-        });
-
-        TableColumn roleCol = new TableColumn("Vai trò");
-        roleCol.setCellValueFactory(
-                new Callback<CellDataFeatures<UserEntity, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(CellDataFeatures<UserEntity, String> data) {
-                return new SimpleStringProperty(data.getValue().getRole());
-            }
-        });
-
-        usersTable.setItems(this.userObservableList);
-        usersTable.getColumns().addAll(userNameCol, nameCol, emailCol, phoneCol, roleCol);
-
-        //Filter on table like Excel
-        TableFilter userTableFilter = new TableFilter(usersTable);
-        this.userObservableBackingList = userTableFilter.getBackingList();
-
-        usersTable.setRowFactory(new Callback<TableView<UserEntity>, TableRow<UserEntity>>() {
-            @Override
-            public TableRow<UserEntity> call(TableView<UserEntity> tableView) {
-                final TableRow<UserEntity> row = new TableRow<>();
-                final ContextMenu contextMenu = new ContextMenu();
-                final MenuItem removeMenuItem = new MenuItem("Xóa");
-                final MenuItem editMenuItem = new MenuItem("Chỉnh sửa thông tin");
-                removeMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        UserEntity currentUser = row.getItem();
-                        removeUser(currentUser);
-                        usersTable.refresh();
-                    }
-                });
-                editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        UserEntity currentUser = row.getItem();
-                        showUserDialog(currentUser);
-                        usersTable.refresh();
-                    }
-                });
-                contextMenu.getItems().addAll(removeMenuItem, editMenuItem);
-                // Set context menu on row, but use a binding to make it only show for non-empty rows:  
-                row.contextMenuProperty().bind(
-                        Bindings.when(row.emptyProperty())
-                                .then((ContextMenu) null)
-                                .otherwise(contextMenu)
-                );
-                return row;
-            }
-        });
-    }
-
     private void removeOrder(OrderEntity orderEntity) {
         Util.orderDAO.delete(orderEntity);
         Util.showNotification(UIConstants.TASK_DONE, "Xóa hóa đơn khỏi CSDL thành công");
         this.orderObservableBackingList.remove(orderEntity);
         statistics();
-    }
-
-    private void removeResource(ResourceEntity resourceEntity) {
-        try {
-            Util.resourceDAO.delete(resourceEntity);
-            Util.showNotification(UIConstants.TASK_DONE, "Xóa thiết bị khỏi CSDL thành công");
-            this.resourceObservableBackingList.remove(resourceEntity);
-            statistics();
-        } catch (DataIntegrityViolationException ex) {
-            Util.showNotification(UIConstants.TASK_FAILED, "Xóa thất bại. Thông tin Thiết bị này đang được dùng ở hóa đơn");
-        }
-    }
-
-    private void removeUser(UserEntity userEntity) {
-        try {
-            this.resourceObservableBackingList.remove(userEntity);
-            Util.userDAO.delete(userEntity);
-            usersTable.refresh();
-            Util.showNotification(UIConstants.TASK_DONE, "Xóa người dùng khỏi CSDL thành công");
-        } catch (DataIntegrityViolationException ex) {
-            Util.showNotification(UIConstants.TASK_FAILED, "Xóa thất bại. Thông tin Người dùng này đang được dùng ở hóa đơn!");
-        }
     }
 
     private void updateOrder(OrderEntity orderEntity) {
@@ -810,15 +643,15 @@ public class MainController {
         realInvoiceTF.setText(Util.getMoneyNumber(totalFinalPayment));
         if (this.orderSelected != null) {
             plannedPaymentTF.setText(Util.getMoneyNumber(this.orderSelected.getPlannedPayment()));
+            shipPaymentTF.setText(Util.getMoneyNumber(this.orderSelected.getShipPayment()));
             shipperPaymentTF.setText(Util.getMoneyNumber(this.orderSelected.getShipperPayment() * -1));
             receiverPaymentTF.setText(Util.getMoneyNumber(this.orderSelected.getReceiverPayment() * -1));
             suppPaymentTF.setText(Util.getMoneyNumber(this.orderSelected.getSuppPayment()));
-            shipPaymentTF.setText(Util.getMoneyNumber(this.orderSelected.getShipPayment()));
             finalPaymentTF.setText(Util.getMoneyNumber(this.orderSelected.getFinalPayment()));
         }
     }
 
-    private void showPaymentDialog(OrderEntity currentOrder, String paymentType) {
+    private void showPaymentDialog(OrderEntity currentOrder, String paymentType, Scene mainScene) {
         Stage dialog = new Stage();
         dialog.initStyle(StageStyle.UTILITY);
 
@@ -847,65 +680,6 @@ public class MainController {
         controller.setCurrentOrder(currentOrder);
         controller.setPaymentType(paymentType);
         controller.setMainScene(this.mainScene);
-        controller.setStage(dialog);
-
-        dialog.show();
-    }
-
-    private void showUserDialog(UserEntity currentUser) {
-        Stage dialog = new Stage();
-        dialog.initStyle(StageStyle.UTILITY);
-
-        Scene scene = null;
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/fxml/user.fxml")
-        );
-        try {
-            scene = new Scene((Parent) loader.load());
-            dialog.setResizable(false);
-        } catch (IOException ex) {
-            Logger.getLogger(AppManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        dialog.setScene(scene);
-
-        dialog.setTitle(currentUser == null ? "Tạo mới người dùng" : "Cập nhật người dùng");
-
-        UserController controller
-                = loader.<UserController>getController();
-        controller.setCurrentUser(currentUser);
-        controller.setStage(dialog);
-        controller.setUsersTable(usersTable);
-        controller.setUsersObservableList(userObservableList);
-        controller.init();
-
-        dialog.show();
-    }
-
-    private void showResourceDialog(ResourceEntity currentResource) {
-        Stage dialog = new Stage();
-        dialog.initStyle(StageStyle.UTILITY);
-
-        Scene scene = null;
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/fxml/resource.fxml")
-        );
-        try {
-            scene = new Scene((Parent) loader.load());
-            dialog.setResizable(false);
-        } catch (IOException ex) {
-            Logger.getLogger(AppManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        dialog.setScene(scene);
-
-        dialog.setTitle(currentResource == null ? "Tạo mới thiết bị" : "Cập nhật thiết bị");
-
-        ResourceController controller
-                = loader.<ResourceController>getController();
-        controller.setCurrentResource(currentResource);
-        controller.setStage(dialog);
-        controller.setResourcesTable(resourcesTable);
-        controller.setResourcesObservableList(resourceObservableList);
-        controller.init();
 
         dialog.show();
     }

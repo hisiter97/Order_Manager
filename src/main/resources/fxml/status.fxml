@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="104.0" prefWidth="328.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.td.trongnghia.uiController.StatusController">
+   <children>
+      <Label layoutX="35.0" layoutY="35.0" text="Chọn trạng thái" />
+      <Button fx:id="confirmBtn" layoutX="239.0" layoutY="70.0" mnemonicParsing="false" text="Xác nhận" />
+      <ChoiceBox fx:id="statusCB" layoutX="131.0" layoutY="31.0" prefWidth="150.0" />
+   </children>
+</AnchorPane>

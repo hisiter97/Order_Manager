@@ -6,7 +6,6 @@
 package com.td.trongnghia.uiController;
 
 import com.td.trongnghia.constants.UIConstants;
-import com.td.trongnghia.daoImpl.UserDAO;
 import com.td.trongnghia.entity.UserEntity;
 import com.td.trongnghia.manager.AppManager;
 import com.td.trongnghia.util.Util;
@@ -19,9 +18,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import org.controlsfx.control.Notifications;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -48,10 +44,8 @@ public class LoginController {
                 try {
                     UserEntity userLogIn = login();
                     if (userLogIn != null) {
-                        Notifications.create()
-                                .title(UIConstants.TASK_DONE)
-                                .text(userLogIn.getUserName() + " has logged in")
-                                .showInformation();
+                        Util.userLogin = userLogIn;
+                        Util.showNotification(UIConstants.TASK_DONE, userLogIn.getUserName() + " vừa đăng nhập");
                         AppManager.userLoggedIn = userLogIn;
                         appManager.showMainScreen();
                     } else {
@@ -65,10 +59,7 @@ public class LoginController {
                     Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 if (loginFailed) {
-                    Notifications.create()
-                            .title(UIConstants.TASK_FAILED)
-                            .text("Username/password wrong or something crashes the system!")
-                            .showError();
+                    Util.showNotification(UIConstants.TASK_FAILED, "Đăng nhập thất bại");
                 }
             }
         });
@@ -76,9 +67,7 @@ public class LoginController {
 
     private UserEntity login() throws NoSuchAlgorithmException, UnsupportedEncodingException {
         String userName = this.userName.getText();
-        String password = this.password.getText();
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-config.xml");
-        UserDAO userDAO = ctx.getBean(UserDAO.class);
-        return userDAO.checkAccountExisted(userName, Util.getMd5Hash(password));
+        String password = this.password.getText();        
+        return Util.userDAO.checkAccountExisted(userName, Util.getMd5Hash(password));
     }
 }

@@ -92,4 +92,10 @@ public class UserEntity implements Serializable{
     public String toString() {
         return this.name;
     }
+
+//    @Override
+//    public boolean equals(Object obj) {
+//        super.equals(obj);
+//        return this.userId == ((UserEntity) obj).getUserId();
+//    }
 }

@@ -25,6 +25,8 @@ public class ResourceEntity implements Serializable{
     private String description;
     @Column(name = "resource_type")
     private Integer resourceType;
+    @Column(name = "quantity")
+    private Integer quantity;
     
 //    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "resourceEntities")
 //    private List<OrderEntity> associatedOrders;
@@ -111,6 +113,20 @@ public class ResourceEntity implements Serializable{
      */
     public void setResourceType(Integer resourceType) {
         this.resourceType = resourceType;
+    }
+
+    /**
+     * @return the quantity
+     */
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    /**
+     * @param quantity the quantity to set
+     */
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     @Override

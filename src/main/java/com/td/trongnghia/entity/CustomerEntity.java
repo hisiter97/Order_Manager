@@ -23,6 +23,9 @@ public class CustomerEntity implements Serializable {
 
     @Column(name = "customer_ident")
     private String customerIdent;
+    
+    @Column(name = "customer_addr")
+    private String customerAddr;
 
     /**
      * @return the customerId
@@ -78,6 +81,20 @@ public class CustomerEntity implements Serializable {
      */
     public void setCustomerIdent(String customerIdent) {
         this.customerIdent = customerIdent;
+    }
+
+    /**
+     * @return the customerAddr
+     */
+    public String getCustomerAddr() {
+        return customerAddr;
+    }
+
+    /**
+     * @param customerAddr the customerAddr to set
+     */
+    public void setCustomerAddr(String customerAddr) {
+        this.customerAddr = customerAddr;
     }
 
     @Override

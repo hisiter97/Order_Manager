@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="343.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.td.trongnghia.uiController.UserController">
+   <children>
+      <GridPane layoutX="100.0" layoutY="57.0" prefHeight="210.0" prefWidth="401.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Tên tài khoản (*)" />
+            <Label fx:id="pwLbl" text="Mật khẩu (*)" GridPane.rowIndex="1" />
+            <Label fx:id="pw2Lbl" prefHeight="17.0" prefWidth="159.0" text="Nhắc lại Mật khẩu (*)" GridPane.rowIndex="2" />
+            <Label text="Email" GridPane.rowIndex="3" />
+            <Label text="SĐT" GridPane.rowIndex="4" />
+            <Label text="Tên" GridPane.rowIndex="5" />
+            <Label text="Vai trò (*)" GridPane.rowIndex="6" />
+            <TextField fx:id="userNameTF" GridPane.columnIndex="1" />
+            <TextField fx:id="emailTF" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="phoneTF" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="nameTF" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <PasswordField fx:id="pwTF" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <PasswordField fx:id="pw2TF" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ComboBox fx:id="roleCB" prefHeight="25.0" prefWidth="201.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+         </children>
+      </GridPane>
+      <Button fx:id="confirmBtn" layoutX="236.0" layoutY="293.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="Xác nhận" />
+   </children>
+</AnchorPane>
