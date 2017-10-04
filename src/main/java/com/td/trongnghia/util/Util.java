@@ -92,10 +92,10 @@ public class Util {
         Text titleTxt = new Text("Công Ty Thiết Bị Sự Kiện La Thăng");
         titleTxt.setFont(Font.font("Arial", FontWeight.BOLD, fontSize));
         gridPane.add(titleTxt, 0, 0, 3, 1);
-        Text title1Txt = new Text("22/14 đường 7-Linh Trung-Thủ Đức");
+        Text title1Txt = new Text("202/4 đường Linh Trung-Linh Trung-Thủ Đức");
         title1Txt.setFont(Font.font("Arial", FontWeight.MEDIUM, fontSize - 1));        
         gridPane.add(title1Txt, 0, 1, 3, 1);
-        Text title2Txt = new Text("0941435373 - 0963231772");
+        Text title2Txt = new Text("0941435373 - 0933.549.011");
         title2Txt.setFont(Font.font("Arial", FontWeight.MEDIUM, fontSize - 1));        
         gridPane.add(title2Txt, 0, 2, 3, 1);
 
